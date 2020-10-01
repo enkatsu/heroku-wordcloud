@@ -10,11 +10,11 @@ heroku create tweet-cloud-app
 # local
 
 ```bash
-gunicorn hello:app
+gunicorn main:app
 ```
 
 ```bash
-FLASK_APP=hello.py FLASK_ENV=development flask run --port 8080
+FLASK_APP=main.py FLASK_ENV=development flask run --port 8080
 ```
 
 # deploy
