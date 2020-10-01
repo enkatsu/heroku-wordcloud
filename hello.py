@@ -35,6 +35,8 @@ def api_wordcloud():
     wordcloud = WordCloud(background_color='white', max_words=2000, mask=alice_mask, contour_width=3,
                           contour_color='steelblue').generate(text)
     data = xmljson.BadgerFish().data(fromstring(wordcloud.to_svg()))
+    width = data['{http://www.w3.org/2000/svg}svg']['@width']
+    height = data['{http://www.w3.org/2000/svg}svg']['@height']
     data = data['{http://www.w3.org/2000/svg}svg']['{http://www.w3.org/2000/svg}text']
     data = map(lambda d: {
         'text': d['$'],
@@ -42,7 +44,11 @@ def api_wordcloud():
         'style': d['@style'],
         'transform': d['@transform'],
     }, data)
-    return jsonify(list(data))
+    return jsonify({
+        'width': width,
+        'height': height,
+        'words': list(data)
+    })
 
 
 if __name__ == '__main__':
