@@ -34,7 +34,15 @@ def api_wordcloud():
     alice_mask = np.array(Image.open(path.join(d, 'alice_mask.png')))
     wordcloud = WordCloud(background_color='white', max_words=2000, mask=alice_mask, contour_width=3,
                           contour_color='steelblue').generate(text)
-    return jsonify(xmljson.Yahoo().data(fromstring(wordcloud.to_svg())))
+    data = xmljson.BadgerFish().data(fromstring(wordcloud.to_svg()))
+    data = data['{http://www.w3.org/2000/svg}svg']['{http://www.w3.org/2000/svg}text']
+    data = map(lambda d: {
+        'text': d['$'],
+        'font_size': d['@font-size'],
+        'style': d['@style'],
+        'transform': d['@transform'],
+    }, data)
+    return jsonify(list(data))
 
 
 if __name__ == '__main__':
