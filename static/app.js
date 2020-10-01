@@ -1,6 +1,7 @@
 d3.json('/api/wordcloud')
   .then(data => {
     console.log(data);
+    d3.select('div.loader-inner.ball-pulse').remove();
     const svg = d3.select('svg#svg-container');
     svg.attr('width', data.width).attr('height', data.height);
     svg.selectAll('text')
@@ -20,4 +21,5 @@ d3.json('/api/wordcloud')
   })
   .catch(err => {
     console.log(err);
+    alert('Error');
   });

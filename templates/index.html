@@ -3,8 +3,25 @@
     <title>Word Cloud</title>
     <script src="/static/d3.v5.min.js"></script>
     <script src="/static/app.js"></script>
+    <link href="/static/loaders.min.css" rel="stylesheet">
+    <style>
+    .ball-pulse {
+        position: fixed;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+    }
+    .ball-pulse > div {
+        background-color: rgb(46, 109, 142);
+    }
+    </style>
 </head>
 <body>
+    <div class="loader-inner ball-pulse">
+        <div></div>
+        <div></div>
+        <div></div>
+    </div>
     <svg id="svg-container"></svg>
 </body>
 </html>
