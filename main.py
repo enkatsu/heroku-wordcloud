@@ -36,23 +36,21 @@ def word_cloud2data_set(word_cloud):
 @app.route('/api/wordcloud')
 def api_word_cloud():
     d = path.dirname(__file__) if "__file__" in locals() else os.getcwd()
-    text = open(path.join(d, 'sample.txt')).read()
-    alice_mask = np.array(Image.open(path.join(d, 'alice_mask.png')))
+    text = open(path.join(d, 'assets/sample.txt')).read()
+    alice_mask = np.array(Image.open(path.join(d, 'assets/alice_mask.png')))
     word_cloud = WordCloud(background_color='white', max_words=2000, mask=alice_mask, contour_width=3,
                           contour_color='steelblue').generate(text)
     return jsonify(word_cloud2data_set(word_cloud))
 
 
 @app.route('/wordcloud')
-def wordcloud():
+def word_cloud():
     d = path.dirname(__file__) if "__file__" in locals() else os.getcwd()
-    text = open(path.join(d, 'sample.txt')).read()
-
-    alice_mask = np.array(Image.open(path.join(d, 'alice_mask.png')))
-
-    wordcloud = WordCloud(background_color='white', max_words=2000, mask=alice_mask, contour_width=3,
+    text = open(path.join(d, 'assets/sample.txt')).read()
+    alice_mask = np.array(Image.open(path.join(d, 'assets/alice_mask.png')))
+    word_cloud = WordCloud(background_color='white', max_words=2000, mask=alice_mask, contour_width=3,
                           contour_color='steelblue').generate(text)
-    return wordcloud.to_svg()
+    return word_cloud.to_svg()
 
 
 if __name__ == '__main__':
