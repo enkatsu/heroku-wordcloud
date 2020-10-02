@@ -15,6 +15,34 @@ def hello():
     return render_template('index.html')
 
 
+def word_cloud2data_set(word_cloud):
+    data = xmljson.BadgerFish().data(fromstring(word_cloud.to_svg()))
+    width = data['{http://www.w3.org/2000/svg}svg']['@width']
+    height = data['{http://www.w3.org/2000/svg}svg']['@height']
+    data = data['{http://www.w3.org/2000/svg}svg']['{http://www.w3.org/2000/svg}text']
+    data = map(lambda d: {
+        'text': d['$'],
+        'font_size': d['@font-size'],
+        'style': d['@style'],
+        'transform': d['@transform'],
+    }, data)
+    return {
+        'width': width,
+        'height': height,
+        'words': list(data)
+    }
+
+
+@app.route('/api/wordcloud')
+def api_word_cloud():
+    d = path.dirname(__file__) if "__file__" in locals() else os.getcwd()
+    text = open(path.join(d, 'sample.txt')).read()
+    alice_mask = np.array(Image.open(path.join(d, 'alice_mask.png')))
+    word_cloud = WordCloud(background_color='white', max_words=2000, mask=alice_mask, contour_width=3,
+                          contour_color='steelblue').generate(text)
+    return jsonify(word_cloud2data_set(word_cloud))
+
+
 @app.route('/wordcloud')
 def wordcloud():
     d = path.dirname(__file__) if "__file__" in locals() else os.getcwd()
@@ -25,30 +53,6 @@ def wordcloud():
     wordcloud = WordCloud(background_color='white', max_words=2000, mask=alice_mask, contour_width=3,
                           contour_color='steelblue').generate(text)
     return wordcloud.to_svg()
-
-
-@app.route('/api/wordcloud')
-def api_wordcloud():
-    d = path.dirname(__file__) if "__file__" in locals() else os.getcwd()
-    text = open(path.join(d, 'sample.txt')).read()
-    alice_mask = np.array(Image.open(path.join(d, 'alice_mask.png')))
-    wordcloud = WordCloud(background_color='white', max_words=2000, mask=alice_mask, contour_width=3,
-                          contour_color='steelblue').generate(text)
-    data = xmljson.BadgerFish().data(fromstring(wordcloud.to_svg()))
-    width = data['{http://www.w3.org/2000/svg}svg']['@width']
-    height = data['{http://www.w3.org/2000/svg}svg']['@height']
-    data = data['{http://www.w3.org/2000/svg}svg']['{http://www.w3.org/2000/svg}text']
-    data = map(lambda d: {
-        'text': d['$'],
-        'font_size': d['@font-size'],
-        'style': d['@style'],
-        'transform': d['@transform'],
-    }, data)
-    return jsonify({
-        'width': width,
-        'height': height,
-        'words': list(data)
-    })
 
 
 if __name__ == '__main__':

@@ -12,8 +12,9 @@ d3.json('/api/wordcloud')
       .attr('style', d => d.style)
       .attr('font-size', d => d.font_size)
       .attr('transform', d => d.transform)
+      .style('cursor', 'pointer')
       .on('mouseover', function(d, i, elm) {
-        d3.select(this).attr('font-size', d.font_size * 2);
+        d3.select(this).attr('font-size', 100);
       })
       .on('mouseout', function(d, i, elm) {
         d3.select(this).attr('font-size', d.font_size);
